@@ -47,11 +47,14 @@ module.exports = env => {return{
       maxChunks: 1,
     }),
     // Banner must be put below UglifyJsPlugin, or it won't work.
-    new webpack.BannerPlugin(`${isProd(env) ? '' : '___DEV___'}https://github.com/xiazeyu/live2d-widget.js built@${nowDate.toLocaleDateString()} ${nowDate.toLocaleTimeString()}`),
+    new webpack.BannerPlugin(`${isProd(env) ? '' : '___DEV___'}https://github.com/aldoram5/live2d-widget.js built@${nowDate.toLocaleDateString()} ${nowDate.toLocaleTimeString()}`),
   ],
 
   resolve: {
-    extensions: ['.js','.html', '.webpack.js', '.web.js'],
+    extensions: ['.js','.html', '.webpack.js', '.web.js','.ts'],
+    alias: {
+      '@framework': path.resolve(__dirname, '../Framework/src')
+    }
   },
 
   module: {
@@ -61,6 +64,11 @@ module.exports = env => {return{
         use: [{
           loader: 'babel-loader',
         }],
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader'
       },
       {test: /\.html$/,
         use: [{

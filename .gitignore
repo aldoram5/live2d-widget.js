@@ -38,3 +38,12 @@ jspm_packages
 
 # Build folder
 lib
+
+# macOS files
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*

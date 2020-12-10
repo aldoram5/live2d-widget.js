@@ -12,11 +12,13 @@
 'use strict';
 
 import device from 'current-device';
+
+import { Live2DAppDelegate } from './live2dappdelegate';
 import { config, configApplyer }from './config/configMgr';
 import { EventEmitter } from './utils/EventEmitter';
 
 if (process.env.NODE_ENV === 'development'){
-  console.log('--- --- --- --- ---\nLive2Dwidget: Hey that, notice that you are now in DEV MODE.\n--- --- --- --- ---');
+  console.log('--- --- --- --- ---\nLive2Dwidget: Hi there! You are in DEV MODE now.\n--- --- --- --- ---');
 }
 /**
  * The main entry point, which is ... nothing
@@ -32,7 +34,8 @@ class L2Dwidget extends EventEmitter {
 /**
  * The init function
  * @param {Object}   [userConfig] User's custom config 用户自定义设置
- * @param {String}   [userConfig.model.jsonPath = ''] Path to Live2D model's main json eg. `https://test.com/miku.model.json` model主文件路径
+ * @param {String}   [userConfig.model.jsonPath = ''] Path to Live2D model's main json eg. `https://test.com/miku.model3.json` model主文件路径
+ * @param {String}   [userConfig.model.jsonDir = ''] Folder containing the model's json files
  * @param {Number}   [userConfig.model.scale = 1] Scale between the model and the canvas 模型与canvas的缩放
  * @param {Number}   [userConfig.display.superSample = 2] rate for super sampling rate 超采样等级
  * @param {Number}   [userConfig.display.width = 150] Width to the canvas which shows the model canvas的长度
@@ -57,12 +60,20 @@ class L2Dwidget extends EventEmitter {
     if((!config.mobile.show)&&(device.mobile())){
       return;
     }
-    import(/* webpackMode: 'lazy' */ './cLive2DApp').then(f => {
+
+    if (Live2DAppDelegate.getInstance().initialize(userConfig) == false) {
+      return;
+    }
+  
+    Live2DAppDelegate.getInstance().run();
+
+/*
+    import(/* webpackMode: 'lazy'  './cLive2DApp').then(f => {
       this.coreApp = f;
       this.live2DMgr = this.coreApp.theRealInit(this);
     }).catch(err => {
       console.error(err);
-    });
+    });*/
   }
 
 
