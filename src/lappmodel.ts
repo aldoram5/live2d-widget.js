@@ -227,6 +227,7 @@ export class LAppModel extends CubismUserModel {
         }
         this._state = LoadStep.WaitLoadExpression;
       } else {
+        console.log("we loaded physics")
         this._state = LoadStep.LoadPhysics;
 
         // callback
@@ -253,6 +254,7 @@ export class LAppModel extends CubismUserModel {
       } else {
         this._state = LoadStep.LoadPose;
 
+        console.log("we loaded pose")
         // callback
         loadCubismPose();
       }
@@ -276,7 +278,7 @@ export class LAppModel extends CubismUserModel {
         this._state = LoadStep.WaitLoadPose;
       } else {
         this._state = LoadStep.SetupEyeBlink;
-
+        //we loaded eyes
         // callback
         setupEyeBlink();
       }
@@ -428,6 +430,7 @@ export class LAppModel extends CubismUserModel {
         this.createRenderer();
         this.setupTextures();
         this.getRenderer().startUp(gl);
+        console.log("finished loading stuff")
       }
     };
   }
@@ -583,6 +586,9 @@ export class LAppModel extends CubismUserModel {
     this._model.update();
   }
 
+
+  //TODO
+  //expose these api
   /**
    * 引数で指定したモーションの再生を開始する
    * @param group モーショングループ名
@@ -669,7 +675,7 @@ export class LAppModel extends CubismUserModel {
     if (this._modelSetting.getMotionCount(group) == 0) {
       return InvalidMotionQueueEntryHandleValue;
     }
-
+    console.log(this._modelSetting.getMotionCount(group))
     const no: number = Math.floor(
       Math.random() * this._modelSetting.getMotionCount(group)
     );

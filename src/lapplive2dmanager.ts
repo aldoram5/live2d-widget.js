@@ -40,7 +40,7 @@ export class LAppLive2DManager {
   }
 
   /**
-   * クラスのインスタンス（シングルトン）を解放する。
+   * Release the singleton instance
    */
   public static releaseInstance(): void {
     if (s_instance != null) {
@@ -51,45 +51,24 @@ export class LAppLive2DManager {
   }
 
   /**
-   * 現在のシーンで保持しているモデルを返す。
-   *
-   * @param no モデルリストのインデックス値
-   * @return モデルのインスタンスを返す。インデックス値が範囲外の場合はNULLを返す。
+   * Simple getter for _model
    */
-  public getModel(no: number): LAppModel {
-    if (no < this._models.getSize()) {
-      return this._models.at(no);
-    }
-
-    return null;
+  public getModel(): LAppModel {
+    return this._model;
   }
 
   /**
-   * 現在のシーンで保持しているすべてのモデルを解放する
-   */
-  public releaseAllModel(): void {
-    for (let i = 0; i < this._models.getSize(); i++) {
-      this._models.at(i).release();
-      this._models.set(i, null);
-    }
-
-    this._models.clear();
-  }
-
-  /**
-   * 画面をドラッグした時の処理
+   * Processing when dragging the screen
    *
-   * @param x 画面のX座標
-   * @param y 画面のY座標
+   * @param x X coordinate
+   * @param y Y coordinate
    */
   public onDrag(x: number, y: number): void {
-    for (let i = 0; i < this._models.getSize(); i++) {
-      const model: LAppModel = this.getModel(i);
 
-      if (model) {
-        model.setDragging(x, y);
+      if (this._model) {
+        this._model.setDragging(x, y);
       }
-    }
+    
   }
 
   /**
@@ -105,29 +84,27 @@ export class LAppLive2DManager {
       );
     }
 
-    for (let i = 0; i < this._models.getSize(); i++) {
-      if (this._models.at(i).hitTest(LAppDefine.HitAreaNameHead, x, y)) {
+      if (this._model.hitTest(LAppDefine.HitAreaNameHead, x, y)) {
         if (LAppDefine.DebugLogEnable) {
           LAppPal.printMessage(
             `[APP]hit area: [${LAppDefine.HitAreaNameHead}]`
           );
         }
-        this._models.at(i).setRandomExpression();
-      } else if (this._models.at(i).hitTest(LAppDefine.HitAreaNameBody, x, y)) {
+        this._model.setRandomExpression();
+      } else if (this._model.hitTest(LAppDefine.HitAreaNameBody, x, y)) {
         if (LAppDefine.DebugLogEnable) {
           LAppPal.printMessage(
             `[APP]hit area: [${LAppDefine.HitAreaNameBody}]`
           );
         }
-        this._models
-          .at(i)
+        this._model
           .startRandomMotion(
             LAppDefine.MotionGroupTapBody,
             LAppDefine.PriorityNormal,
             this._finishedMotion
           );
       }
-    }
+    
   }
 
   /**
@@ -138,56 +115,30 @@ export class LAppLive2DManager {
     let projection: Csm_CubismMatrix44 = new Csm_CubismMatrix44();
 
     const { width, height } = canvas;
-    projection.scale(1.0, width / height);
+    //TODO for now I'm duplicating the scale here
+    //however, I think this is hindering performance
+    //need to check where exactly this can be adjusted
+    //so we don't need to rely on this "hack"
+    
+    projection.scale(2.0, 2 * width / height);
 
     if (this._viewMatrix != null) {
       projection.multiplyByMatrix(this._viewMatrix);
     }
 
     const saveProjection: Csm_CubismMatrix44 = projection.clone();
-    const modelCount: number = this._models.getSize();
 
-    for (let i = 0; i < modelCount; ++i) {
-      const model: LAppModel = this.getModel(i);
-      projection = saveProjection.clone();
+    this._model.update();
+    this._model.draw(projection);
 
-      model.update();
-      model.draw(projection); // 参照渡しなのでprojectionは変質する。
-    }
   }
 
   /**
-   * 次のシーンに切りかえる
-   * サンプルアプリケーションではモデルセットの切り替えを行う。
+   * Simple method to load the model
    */
-  public nextScene(): void {
-    //const no: number = (this._sceneIndex + 1) % LAppDefine.ModelDirSize;
-    //this.changeScene(no);
-  }
+  public loadModelScene(): void {
 
-  /**
-   * シーンを切り替える
-   * サンプルアプリケーションではモデルセットの切り替えを行う。
-   */
-  public changeScene(index: number): void {
-    this._sceneIndex = index;
-    /*if (LAppDefine.DebugLogEnable) {
-      LAppPal.printMessage(`[APP]model index: ${this._sceneIndex}`);
-    }*/
-
-    // ModelDir[]に保持したディレクトリ名から
-    // model3.jsonのパスを決定する。
-    // ディレクトリ名とmodel3.jsonの名前を一致させておくこと。
-    //const model: string = LAppDefine.ModelDir[index];
-    //const modelPath: string = LAppDefine.ResourcesPath + model + '/';
-    //let modelJsonName: string = LAppDefine.ModelDir[index];
-    //modelJsonName += '.model3.json';
-
-    this.releaseAllModel();
-    this._models.pushBack(new LAppModel());
-    //this._models.at(0).loadAssets(modelPath, modelJsonName);
-
-    this._models.at(0).loadAssetsForModelAtPath(config.model.jsonPath);
+    this._model.loadAssetsForModelAtPath(config.model.jsonPath);
   }
 
   /**
@@ -195,15 +146,12 @@ export class LAppLive2DManager {
    */
   constructor() {
     this._viewMatrix = new Csm_CubismMatrix44();
-    this._models = new Csm_csmVector<LAppModel>();
-    this._sceneIndex = 0;
-    this.changeScene(this._sceneIndex);
+    this._model = new LAppModel();
+    this.loadModelScene();
   }
 
   _viewMatrix: Csm_CubismMatrix44; // モデル描画に用いるview行列
-  _models: Csm_csmVector<LAppModel>; // モデルインスタンスのコンテナ
-  _sceneIndex: number; // 表示するシーンのインデックス値
-  // モーション再生終了のコールバック関数
+  _model: LAppModel; // We'll only process one model at a time
   _finishedMotion = (self: ACubismMotion): void => {
     LAppPal.printMessage('Motion Finished:');
     console.log(self);

@@ -61,7 +61,8 @@ export class Live2DAppDelegate {
 
     //check if element exists already
     let e = document.getElementById(config.name.div)
-    if (e !== null) {
+    let c = document.getElementById(config.name.canvas)
+    if (e == null || c == null) {
       //if it doesn't then lets create it
       let container = document.createElement('div');
       container.id = config.name.div;
@@ -80,7 +81,13 @@ export class Live2DAppDelegate {
       canvas.style.setProperty('bottom', config.display.vOffset + 'px');
       canvas.style.setProperty('z-index', "99999");
       canvas.style.setProperty('pointer-events', 'none');
+      // append canvas to dom
+      document.body.appendChild(canvas);
 
+
+    }else{
+      canvas = <HTMLCanvasElement>c;
+      
     }
 
     // initialize web gl
@@ -98,9 +105,7 @@ export class Live2DAppDelegate {
       return false;
     }
 
-    // append canvas to dom
-    document.body.appendChild(canvas);
-
+    
     if (!frameBuffer) {
       frameBuffer = gl.getParameter(gl.FRAMEBUFFER_BINDING);
     }
@@ -160,12 +165,10 @@ export class Live2DAppDelegate {
       if (s_instance == null) {
         return;
       }
-
       // 時間更新
       LAppPal.updateTime();
-      //TODO check here so you don't use black but transparent
       // 画面の初期化
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
       // 深度テストを有効化
       gl.enable(gl.DEPTH_TEST);

@@ -17,6 +17,8 @@ import { TextureInfo } from './lapptexturemanager';
 import { LAppPal } from './lapppal';
 import * as LAppDefine from './lappdefine';
 
+import { config } from './config/configMgr';
+
 /**
  * 描画クラス。
  */
@@ -175,9 +177,12 @@ export class LAppView {
       live2DManager.onTap(x, y);
 
       // 歯車にタップしたか
+
+      //TODO
+      /*
       if (this._gear.isHit(pointX, pointY)) {
         live2DManager.nextScene();
-      }
+      }*/
     }
   }
 
