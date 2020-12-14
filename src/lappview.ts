@@ -28,8 +28,6 @@ export class LAppView {
    */
   constructor() {
     this._programId = null;
-    this._back = null;
-    this._gear = null;
 
     // タッチ関係のイベント管理
     this._touchManager = new TouchManager();
@@ -56,7 +54,9 @@ export class LAppView {
     this._viewMatrix.setScreenRect(left, right, bottom, top); // デバイスに対応する画面の範囲。 Xの左端、Xの右端、Yの下端、Yの上端
 
     const screenW: number = Math.abs(left - right);
-    this._deviceToScreen.scaleRelative(screenW / width, -screenW / width);
+
+    //TODO
+    this._deviceToScreen.scaleRelative(config.scale * screenW / width, config.scale * -screenW / width);
     this._deviceToScreen.translateRelative(-width * 0.5, -height * 0.5);
 
     // 表示範囲の設定
@@ -80,12 +80,6 @@ export class LAppView {
     this._touchManager = null;
     this._deviceToScreen = null;
 
-    this._gear.release();
-    this._gear = null;
-
-    this._back.release();
-    this._back = null;
-
     gl.deleteProgram(this._programId);
     this._programId = null;
   }
@@ -95,13 +89,6 @@ export class LAppView {
    */
   public render(): void {
     gl.useProgram(this._programId);
-
-    if (this._back) {
-      this._back.render(this._programId);
-    }
-    if (this._gear) {
-      this._gear.render(this._programId);
-    }
 
     gl.flush();
 
@@ -227,8 +214,6 @@ export class LAppView {
   _deviceToScreen: Csm_CubismMatrix44; // デバイスからスクリーンへの行列
   _viewMatrix: Csm_CubismViewMatrix; // viewMatrix
   _programId: WebGLProgram; // シェーダID
-  _back: LAppSprite; // 背景画像
-  _gear: LAppSprite; // ギア画像
   _changeModel: boolean; // モデル切り替えフラグ
   _isClick: boolean; // クリック中
 }

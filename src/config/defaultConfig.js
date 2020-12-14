@@ -10,7 +10,6 @@
 const defaultConfig = {
   model: {
     jsonPath: 'https://unpkg.com/live2d-widget-model-shizuku@latest/assets/shizuku.model.json',
-    scale: 1,
   },
   display: {
     superSample: 2,
@@ -22,23 +21,20 @@ const defaultConfig = {
   },
   mobile: {
     show: true,
-    scale: 0.8,
     motion: true,
   },
   name: {
     canvas: 'live2dcanvas',
     div: 'live2d-widget',
   },
-  react: {
-    opacity: 1,
-  },
+  opacity:1.0,
   dev: {
     border: false
   },
-  dialog: {
-    enable: false,
-    script: null
-  }
+  scale:1.0,
+  onTouch: null,
+  onTouchBody:null,
+  onTouchHead:null,
 }
 
 module.exports = defaultConfig;

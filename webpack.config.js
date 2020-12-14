@@ -5,6 +5,7 @@ const nowDate = new Date();
 const isProd = e => e === 'prod';
 
 module.exports = env => {return{
+  mode:isProd(env)? 'production': 'development',
 
   entry: [
     'core-js/fn/promise',
@@ -18,7 +19,7 @@ module.exports = env => {return{
     library: 'L2Dwidget',
     libraryExport: 'L2Dwidget',
     libraryTarget: 'var',
-    path: path.resolve(__dirname, 'lib'),
+    path: path.resolve(__dirname, 'build'),
     pathinfo: (isProd(env) ? false : true),
   },
 
@@ -59,11 +60,12 @@ module.exports = env => {return{
   resolve: {
     extensions: ['.js','.html', '.webpack.js', '.web.js', '.ts'],
     alias: {
-      '@framework': path.resolve(__dirname, '../Framework/src')
+      '@framework': path.resolve(__dirname, 'Framework/src')
     }
   },
 
   module: {
+
     rules: [
       {test: /\.js$/,
         include: path.resolve(__dirname, "src"),

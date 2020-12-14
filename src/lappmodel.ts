@@ -10,6 +10,7 @@ import { Live2DCubismFramework as cubismid } from '@framework/id/cubismid';
 import { Live2DCubismFramework as cubismusermodel } from '@framework/model/cubismusermodel';
 import { Live2DCubismFramework as icubismmodelsetting } from '@framework/icubismmodelsetting';
 import { Live2DCubismFramework as cubismmodelsettingjson } from '@framework/cubismmodelsettingjson';
+import { Live2DCubismFramework as cubismmodel } from '@framework/model/cubismmodel';
 import { Live2DCubismFramework as cubismdefaultparameterid } from '@framework/cubismdefaultparameterid';
 import { Live2DCubismFramework as acubismmotion } from '@framework/motion/acubismmotion';
 import { Live2DCubismFramework as cubismeyeblink } from '@framework/effect/cubismeyeblink';
@@ -41,6 +42,9 @@ import CubismUserModel = cubismusermodel.CubismUserModel;
 import ICubismModelSetting = icubismmodelsetting.ICubismModelSetting;
 import CubismModelSettingJson = cubismmodelsettingjson.CubismModelSettingJson;
 import CubismDefaultParameterId = cubismdefaultparameterid;
+import CubismModel = cubismmodel.CubismModel;
+
+import { config } from './config/configMgr.js';
 
 import { LAppPal } from './lapppal';
 import { gl, canvas, frameBuffer, Live2DAppDelegate } from './live2dappdelegate';
@@ -147,24 +151,11 @@ export class LAppModel extends CubismUserModel {
     this._initialized = false;
 
     this._modelSetting = setting;
+    
+    this.setOpacity(config.opacity);
 
     console.log("Set Up Model")
     // CubismModel
-    /*if (this._modelSetting.getModelFileName() != '' && this._modelPath != '') {
-      const modelFileName = this._modelSetting.getModelFileName();
-      console.log("GAH")
-      fetch(this._modelPath)
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => {
-          this.loadModel(arrayBuffer);
-          this._state = LoadStep.LoadExpression;
-          console.log("GAH2")
-          // callback
-          loadCubismExpression();
-        });
-
-      this._state = LoadStep.WaitLoadModel;
-    } else */
     if (this._modelSetting.getModelFileName() != '') {
       console.log("GAH")
       const modelFileName = this._modelSetting.getModelFileName();
@@ -586,9 +577,6 @@ export class LAppModel extends CubismUserModel {
     this._model.update();
   }
 
-
-  //TODO
-  //expose these api
   /**
    * 引数で指定したモーションの再生を開始する
    * @param group モーショングループ名
@@ -865,6 +853,21 @@ export class LAppModel extends CubismUserModel {
 
       this.doDraw();
     }
+  }
+  public getCubismModel(): CubismModel{
+    return this.getModel();
+  }
+
+  public printParameters(): void{
+    console.log(this.getModel().getModel().parameters);
+  }
+
+  public getParameterIds(): String[]{
+    return this.getModel().getModel().parameters.ids;
+  }
+
+  public setParameterValueById(parameterId: cubismid.CubismId, value: number): void{
+    return this.getModel().setParameterValueById(parameterId,value);
   }
 
   /**

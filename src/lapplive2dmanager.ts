@@ -115,12 +115,8 @@ export class LAppLive2DManager {
     let projection: Csm_CubismMatrix44 = new Csm_CubismMatrix44();
 
     const { width, height } = canvas;
-    //TODO for now I'm duplicating the scale here
-    //however, I think this is hindering performance
-    //need to check where exactly this can be adjusted
-    //so we don't need to rely on this "hack"
-    
-    projection.scale(2.0, 2 * width / height);
+
+    projection.scale(config.scale, config.scale * width / height);
 
     if (this._viewMatrix != null) {
       projection.multiplyByMatrix(this._viewMatrix);

@@ -5,6 +5,7 @@ const nowDate = new Date();
 const isProd = e => e === 'prod';
 
 module.exports = env => {return{
+  mode:isProd(env)? 'production': 'development',
 
   entry: [
     './src/index.js',
@@ -13,7 +14,7 @@ module.exports = env => {return{
   output: {
     filename: 'L2Dwidget.common.js',
     libraryTarget: 'commonjs',
-    path: path.resolve(__dirname, 'lib'),
+    path: path.resolve(__dirname, 'build'),
     pathinfo: (isProd(env) ? false : true),
   },
 
@@ -53,7 +54,7 @@ module.exports = env => {return{
   resolve: {
     extensions: ['.js','.html', '.webpack.js', '.web.js','.ts'],
     alias: {
-      '@framework': path.resolve(__dirname, '../Framework/src')
+      '@framework': path.resolve(__dirname, 'Framework/src')
     }
   },
 
