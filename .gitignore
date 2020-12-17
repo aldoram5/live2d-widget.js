@@ -48,13 +48,12 @@ lib
 # Thumbnails
 ._*
 
-# Live2D libraries
+# Live2D core library
+# Copy it on this folder
 Core/*
-Framework/*
 
 # Keep folders inside repo so building is easier
 !Core/.gitkeep 
-!Framework/.gitkeep
 
 # Build folder
 Build/* 

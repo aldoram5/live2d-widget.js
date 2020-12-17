@@ -1,3 +1,6 @@
 [submodule "ghpages"]
 	path = ghpages
 	url = https://github.com/xiazeyu/live2d-widget.js-doc.git
+[submodule "Framework"]
+	path = Framework
+	url = https://github.com/Live2D/CubismWebFramework.git
