@@ -113,7 +113,10 @@ class L2Dwidget extends EventEmitter {
    */
 
   captureFrame(callback) {
+    
     if(canvas !=null){
+      //Live2DAppDelegate.getInstance().getView().render()
+      LAppLive2DManager.getInstance().getModel().doDraw()
       callback(canvas.toDataURL('image/png'))
     }
 
@@ -167,6 +170,10 @@ class L2Dwidget extends EventEmitter {
 
   setParameterValueById(parameterId, value){
     return LAppLive2DManager.getInstance().getModel().setParameterValueById(parameterId,value);
+    //return this.getModel().setParameterValueById(parameterId,value);
+  }
+  setParameterValueByName(name, value){
+    return LAppLive2DManager.getInstance().getModel().setParameterValueById(name,value);
     //return this.getModel().setParameterValueById(parameterId,value);
   }
 

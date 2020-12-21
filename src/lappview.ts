@@ -157,19 +157,13 @@ export class LAppView {
       const y: number = this._deviceToScreen.transformY(
         this._touchManager.getY()
       ); // 論理座標変化した座標を取得。
-
+/*
       if (LAppDefine.DebugTouchLogEnable) {
         LAppPal.printMessage(`[APP]touchesEnded x: ${x} y: ${y}`);
-      }
+      }*/
       live2DManager.onTap(x, y);
 
-      // 歯車にタップしたか
 
-      //TODO
-      /*
-      if (this._gear.isHit(pointX, pointY)) {
-        live2DManager.nextScene();
-      }*/
     }
   }
 

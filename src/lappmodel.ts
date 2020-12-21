@@ -108,20 +108,20 @@ export class LAppModel extends CubismUserModel {
   }
 
   /**
-   * model3.jsonが置かれたディレクトリとファイルパスからモデルを生成する
+   * convenience method for easy loading the model3.json file
    * @param dir
-   * @param fileName
+   * @param path
    */
   public loadAssetsForModelAtPath(path: string): void {
 
     this._modelPath = path;
-    console.log(path)
+    //console.log(path)
 
     this._modelHomeDir = this._modelPath.substring(0, this._modelPath.lastIndexOf('/')) +"/";
 
     fetch(path)
       .then(response => {
-        console.log(response)
+        //console.log(response)
         return response.arrayBuffer()
       })
       .then(arrayBuffer => {
@@ -129,8 +129,6 @@ export class LAppModel extends CubismUserModel {
           arrayBuffer,
           arrayBuffer.byteLength
         );
-        console.log("wooohoooo")
-        console.log(setting)
         // ステートを更新
         this._state = LoadStep.LoadModel;
 
@@ -154,12 +152,10 @@ export class LAppModel extends CubismUserModel {
     
     this.setOpacity(config.opacity);
 
-    console.log("Set Up Model")
     // CubismModel
     if (this._modelSetting.getModelFileName() != '') {
-      console.log("GAH")
       const modelFileName = this._modelSetting.getModelFileName();
-      console.log(modelFileName)
+      
       fetch(`${this._modelHomeDir}/${modelFileName}`)
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
@@ -178,7 +174,6 @@ export class LAppModel extends CubismUserModel {
     // Expression
     const loadCubismExpression = (): void => {
 
-      console.log("loading expressions")
       if (this._modelSetting.getExpressionCount() > 0) {
         const count: number = this._modelSetting.getExpressionCount();
 
@@ -218,7 +213,6 @@ export class LAppModel extends CubismUserModel {
         }
         this._state = LoadStep.WaitLoadExpression;
       } else {
-        console.log("we loaded physics")
         this._state = LoadStep.LoadPhysics;
 
         // callback
@@ -244,8 +238,6 @@ export class LAppModel extends CubismUserModel {
         this._state = LoadStep.WaitLoadPhysics;
       } else {
         this._state = LoadStep.LoadPose;
-
-        console.log("we loaded pose")
         // callback
         loadCubismPose();
       }
@@ -421,7 +413,6 @@ export class LAppModel extends CubismUserModel {
         this.createRenderer();
         this.setupTextures();
         this.getRenderer().startUp(gl);
-        console.log("finished loading stuff")
       }
     };
   }
@@ -444,7 +435,7 @@ export class LAppModel extends CubismUserModel {
       ) {
         // テクスチャ名が空文字だった場合はロード・バインド処理をスキップ
         if (this._modelSetting.getTextureFileName(modelTextureNumber) == '') {
-          console.log('getTextureFileName null');
+
           continue;
         }
 
@@ -663,7 +654,8 @@ export class LAppModel extends CubismUserModel {
     if (this._modelSetting.getMotionCount(group) == 0) {
       return InvalidMotionQueueEntryHandleValue;
     }
-    console.log(this._modelSetting.getMotionCount(group))
+
+    //console.log(this._modelSetting.getMotionCount(group))
     const no: number = Math.floor(
       Math.random() * this._modelSetting.getMotionCount(group)
     );
@@ -736,6 +728,7 @@ export class LAppModel extends CubismUserModel {
       return false;
     }
 
+    //TODO
     const count: number = this._modelSetting.getHitAreasCount();
 
     for (let i = 0; i < count; i++) {

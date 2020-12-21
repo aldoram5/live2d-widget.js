@@ -7,9 +7,6 @@
 
 import { LogLevel } from '@framework/live2dcubismframework';
 
-/**
- * Sample Appで使用する定数
- */
 // 画面
 export const ViewMaxScale = 2.0;
 export const ViewMinScale = 0.8;
@@ -37,7 +34,7 @@ export const PriorityNormal = 2;
 export const PriorityForce = 3;
 
 // デバッグ用ログの表示オプション
-export const DebugLogEnable = true;
+export const DebugLogEnable = false;
 export const DebugTouchLogEnable = false;
 
 // Frameworkから出力するログのレベル設定
