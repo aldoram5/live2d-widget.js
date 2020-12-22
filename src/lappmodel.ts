@@ -728,13 +728,39 @@ export class LAppModel extends CubismUserModel {
       return false;
     }
 
-    //TODO
     const count: number = this._modelSetting.getHitAreasCount();
 
     for (let i = 0; i < count; i++) {
       if (this._modelSetting.getHitAreaName(i) == hitArenaName) {
         const drawId: CubismIdHandle = this._modelSetting.getHitAreaId(i);
         return this.isHit(drawId, x, y);
+      }
+    }
+
+    return false;
+  }
+  /**
+   * 当たり判定テスト
+   * 指定ＩＤの頂点リストから矩形を計算し、座標をが矩形範囲内か判定する。
+   *
+   * @param hitArenaName  当たり判定をテストする対象のID
+   * @param x             判定を行うX座標
+   * @param y             判定を行うY座標
+   */
+  public checkHits(x: number, y: number): boolean {
+    // 透明時は当たり判定無し。
+    if (this._opacity < 1) {
+      return false;
+    }
+
+    const count: number = this._modelSetting.getHitAreasCount();
+
+
+    for (let i = 0; i < count; i++) {
+      const drawId: CubismIdHandle = this._modelSetting.getHitAreaId(i);
+        
+      if (this.isHit(drawId, x, y)) {
+        config.onTouchHitArea(this._modelSetting.getHitAreaName(i),x,y);
       }
     }
 
@@ -853,6 +879,14 @@ export class LAppModel extends CubismUserModel {
 
   public printParameters(): void{
     console.log(this.getModel().getModel().parameters);
+  }
+
+  public printExpressions(): void{
+    console.log(this._expressions);
+  }
+
+  public printMotions(): void{
+    console.log(this._motions);
   }
 
   public getParameterIds(): String[]{

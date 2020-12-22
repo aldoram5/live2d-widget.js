@@ -52,16 +52,6 @@ class L2Dwidget extends EventEmitter {
    * 
    * No idea what the hitokoto api was so disabling it now.
    * 
-   * Functions:
-   * 
-   * @function captureFrame
-   * 
-   * @function downloadFrame
-   * 
-   * Download is dependent on capture and since for some reason capture doesn't 
-   * work for some reason(we only get a blank image) I removed them for now.
-   * 
-   * 
    * Added:
    * Callbacks and default callbacks for events:
    * 
@@ -85,9 +75,7 @@ class L2Dwidget extends EventEmitter {
    * @param {String}   [userConfig.name.canvas = 'live2dcanvas'] ID name of the canvas canvas元素的ID
    * @param {String}   [userConfig.name.div = 'live2d-widget'] ID name of the div div元素的ID
    * @param {Number}   [userConfig.opacity = 1.0] opacity 透明度
-   * @param {Function}   [userConfig.onTouchHead = null] callback for on touch model head event
-   * @param {Function}   [userConfig.onTouchBody = null] callback for on touch model body event
-   * @param {Function}   [userConfig.onTouch = null] callback for on touch model body event
+   * @param {Function}   [userConfig.onTouchHitArea = null] callback for on touch model on a hitarea, the callback contains the hit area name and the X and Y coordinates
    * @return {null}
    */
 
@@ -115,7 +103,6 @@ class L2Dwidget extends EventEmitter {
   captureFrame(callback) {
     
     if(canvas !=null){
-      //Live2DAppDelegate.getInstance().getView().render()
       LAppLive2DManager.getInstance().getModel().doDraw()
       callback(canvas.toDataURL('image/png'))
     }
@@ -142,6 +129,14 @@ class L2Dwidget extends EventEmitter {
 
   printParameters(){
     LAppLive2DManager.getInstance().getModel().printParameters();
+  }
+
+  printExpressions(){
+    LAppLive2DManager.getInstance().getModel().printExpressions();
+  }
+
+  printMotions(){
+    LAppLive2DManager.getInstance().getModel().printMotions();
   }
 
   hitTest(hitAreaName,x,y){

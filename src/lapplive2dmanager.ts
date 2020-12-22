@@ -72,10 +72,10 @@ export class LAppLive2DManager {
   }
 
   /**
-   * 画面をタップした時の処理
+   * Process taps/clicks on the model
    *
-   * @param x 画面のX座標
-   * @param y 画面のY座標
+   * @param x X coordinate
+   * @param y Y coordinate
    */
   public onTap(x: number, y: number): void {
     if (LAppDefine.DebugLogEnable) {
@@ -84,6 +84,8 @@ export class LAppLive2DManager {
       );
     }
 
+    this._model.checkHits(x,y);
+      /*
       if (this._model.hitTest(LAppDefine.HitAreaNameHead, x, y)) {
         if (LAppDefine.DebugLogEnable) {
           LAppPal.printMessage(
@@ -103,7 +105,7 @@ export class LAppLive2DManager {
             LAppDefine.PriorityNormal,
             this._finishedMotion
           );
-      }
+      }*/
     
   }
 

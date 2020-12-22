@@ -32,9 +32,7 @@ const defaultConfig = {
     border: false
   },
   scale:1.0,
-  onTouch: null,
-  onTouchBody:null,
-  onTouchHead:null,
+  onTouchHitArea:null
 }
 
 module.exports = defaultConfig;
