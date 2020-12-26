@@ -63,6 +63,10 @@ class L2Dwidget extends EventEmitter {
    * @param {Object}   [userConfig] User's custom config 用户自定义设置
    * @param {String}   [userConfig.model.jsonPath = ''] Path to Live2D model's main json eg. `https://test.com/miku.model3.json` model主文件路径
    * @param {String}   [userConfig.model.jsonDir = ''] Folder containing the model's json files
+   * @param {Boolean}   [userConfig.model.lipsync = false] Wheter to allow lipsync or not
+   * @param {Boolean}   [userConfig.model.eyeBlink = true] Wheter to allow eyeblink or not
+   * @param {String}   [userConfig.model.lipsyncFunction = null] Lipsync function, the function will receive the deltatime between updates and 
+   *        must return a value(depends on your model's config but it's usually just between 0 and 1)
    * @param {Number}   [userConfig.scale = 1] Scale between the model and the canvas 模型与canvas的缩放
    * @param {Number}   [userConfig.display.superSample = 2] rate for super sampling rate 超采样等级
    * @param {Number}   [userConfig.display.width = 150] Width to the canvas which shows the model canvas的长度
@@ -75,7 +79,8 @@ class L2Dwidget extends EventEmitter {
    * @param {String}   [userConfig.name.canvas = 'live2dcanvas'] ID name of the canvas canvas元素的ID
    * @param {String}   [userConfig.name.div = 'live2d-widget'] ID name of the div div元素的ID
    * @param {Number}   [userConfig.opacity = 1.0] opacity 透明度
-   * @param {Function}   [userConfig.onTouchHitArea = null] callback for on touch model on a hitarea, the callback contains the hit area name and the X and Y coordinates
+   * @param {Function}   [userConfig.onTouchHitArea = null] callback for on touch model on a hitarea, the callback contains 
+   *        the hit area name and the X and Y coordinates
    * @return {null}
    */
 
@@ -139,10 +144,6 @@ class L2Dwidget extends EventEmitter {
     LAppLive2DManager.getInstance().getModel().printMotions();
   }
 
-  hitTest(hitAreaName,x,y){
-    return LAppLive2DManager.getInstance().getModel().hitTest(hitAreaName,x,y);
-  }
-
   startRandomExpression(){
     LAppLive2DManager.getInstance().getModel().setRandomExpression();
   }
@@ -165,11 +166,11 @@ class L2Dwidget extends EventEmitter {
 
   setParameterValueById(parameterId, value){
     return LAppLive2DManager.getInstance().getModel().setParameterValueById(parameterId,value);
-    //return this.getModel().setParameterValueById(parameterId,value);
   }
+  
   setParameterValueByName(name, value){
-    return LAppLive2DManager.getInstance().getModel().setParameterValueById(name,value);
-    //return this.getModel().setParameterValueById(parameterId,value);
+    const id = LAppLive2DManager.getInstance().getModel().getParameterIdByName(name);
+    return setParameterValueById(id,value);
   }
 
 };

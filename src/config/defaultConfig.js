@@ -10,6 +10,10 @@
 const defaultConfig = {
   model: {
     jsonPath: 'https://unpkg.com/live2d-widget-model-shizuku@latest/assets/shizuku.model.json',
+    jsonDir: '',
+    lipsync: false,
+    eyeBlink: true,
+    lipsyncFunction: null,
   },
   display: {
     superSample: 2,

@@ -152,6 +152,8 @@ export class LAppModel extends CubismUserModel {
     
     this.setOpacity(config.opacity);
 
+    this._lipsync = config.model.lipsync
+
     // CubismModel
     if (this._modelSetting.getModelFileName() != '') {
       const modelFileName = this._modelSetting.getModelFileName();
@@ -269,7 +271,7 @@ export class LAppModel extends CubismUserModel {
 
     // EyeBlink
     const setupEyeBlink = (): void => {
-      if (this._modelSetting.getEyeBlinkParameterCount() > 0) {
+      if (this._modelSetting.getEyeBlinkParameterCount() > 0 && config.model.eyeBlink) {
         this._eyeBlink = CubismEyeBlink.create(this._modelSetting);
         this._state = LoadStep.SetupBreath;
       }
@@ -552,8 +554,15 @@ export class LAppModel extends CubismUserModel {
     }
 
     // リップシンクの設定
+    // Lipsync section 
     if (this._lipsync) {
-      const value = 0; // リアルタイムでリップシンクを行う場合、システムから音量を取得して、0~1の範囲で値を入力します。
+      //const value = 0; // リアルタイムでリップシンクを行う場合、システムから音量を取得して、0~1の範囲で値を入力します。
+      //example keeps a const value however for this to actually work on our 
+      //project we'll read the value from a user defined function
+      var value = 0;
+      if (typeof config.model.lipsyncFunction === 'function') {
+        value = config.model.lipsyncFunction(deltaTimeSeconds);
+      }
 
       for (let i = 0; i < this._lipSyncIds.getSize(); ++i) {
         this._model.addParameterValueById(this._lipSyncIds.at(i), value, 0.8);
@@ -895,6 +904,10 @@ export class LAppModel extends CubismUserModel {
 
   public setParameterValueById(parameterId: cubismid.CubismId, value: number): void{
     return this.getModel().setParameterValueById(parameterId,value);
+  }
+
+  public getParameterIdByName(id: string | csmstring.csmString){
+    return CubismFramework.getIdManager().getId(id);
   }
 
   /**
