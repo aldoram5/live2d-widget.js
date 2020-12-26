@@ -1,3 +1,160 @@
+# Updated readme:
+
+This is a fork of the original live2d-widget.js. This fork updates the library to work with the newest version of live2D.
+
+### Core changes
+
+- Works with the newest version of live2D.
+- Widget has more functions to allow the user to start motions.
+- User can define their own callback to respond to hit area clicks.
+- User can inspect the model's expressions, motions, etc. with the added utility functions.
+- Widget adapts to the specified div now instead of forcing it to a corner
+- Disabled the chat module.
+- Lipsync can be used now. You just need to specify a function that accepts the deltatime between updates as parameters and that returns the value used on the mouth parameter(you specify which parameter is used on the live2d editor)
+- Auto blink works as well.(Same as with lipsync you specify which parameters are used for this with the live2d editor on your model)
+
+## How to use it
+
+### Adding your model to your site
+
+Simply import the script `L2Dwidget.min.js` and the `live2dcubismcore.min.js`(this one can be found on the [Live2D SDK for web](https://www.live2d.com/en/download/cubism-sdk/download-web/) package) on your html file.
+```
+<script type="text/javascript" charset="utf8" async="" src="/live2dcubismcore.min.js"></script>
+<script type="text/javascript" charset="utf8" async="" src="/L2Dwidget.min.js"></script>
+```
+
+Call the init function with a configuration object as a parameter on any script tag:
+```
+L2Dwidget.init({
+   model: { jsonPath: '../resources/model/mymodel.model3.json' }, 
+   scale:2.0,
+   opacity:1.0
+
+})
+```
+This will create a div containing a canvas using webgl to show the model on the right side of the screen. However you can specify to use a div in particular by giving said div the default id `live2d-widget` and putting a canvas element with the id `live2dcanvas`. These ids can be changed by specifying them on the configuration object.
+
+These are all the configuration options available, trying to use almost the same config options as the original live2D widget:
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [userConfig] | <code>Object</code> |  | User's custom config 用户自定义设置 |
+| [userConfig.model.jsonPath] | <code>String</code> | <code>&#x27;&#x27;</code> | Path to Live2D model's main json eg. `https://test.com/miku.model3.json` model主文件路径 |
+| [userConfig.model.jsonDir] | <code>String</code> | <code>&#x27;&#x27;</code> | Folder containing the model's json files |
+| [userConfig.model.eyeBlink] | <code>Boolean</code> | <code>true</code> | Wheter to allow eyeblink or not |
+| [userConfig.model.lipsync] | <code>Boolean</code> | <code>false</code> | Wheter to allow lipsync or not |
+| [userConfig.model.lipsyncFunction] | <code>String</code> | <code>null</code> | Lipsync function, the function will receive the deltatime between updates and         must return a value(depends on your model's config but it's usually just between 0 and 1) |
+| [userConfig.scale] | <code>Number</code> | <code>1</code> | Scale between the model and the canvas 模型与canvas的缩放 |
+| [userConfig.display.superSample] | <code>Number</code> | <code>2</code> | rate for super sampling rate 超采样等级 |
+| [userConfig.display.width] | <code>Number</code> | <code>150</code> | Width to the canvas which shows the model canvas的长度 |
+| [userConfig.display.height] | <code>Number</code> | <code>300</code> | Height to the canvas which shows the model canvas的高度 |
+| [userConfig.display.position] | <code>String</code> | <code>&#x27;right&#x27;</code> | Left of right side to show 显示位置：左或右 |
+| [userConfig.display.hOffset] | <code>Number</code> | <code>0</code> | Horizontal offset of the canvas canvas水平偏移 |
+| [userConfig.display.vOffset] | <code>Number</code> | <code>-20</code> | Vertical offset of the canvas canvas垂直偏移 |
+| [userConfig.mobile.show] | <code>Boolean</code> | <code>true</code> | Whether to show on mobile device 是否在移动设备上显示 |
+| [userConfig.mobile.scale] | <code>Number</code> | <code>0.5</code> | Scale on mobile device 移动设备上的缩放 |
+| [userConfig.name.canvas] | <code>String</code> | <code>&#x27;live2dcanvas&#x27;</code> | ID name of the canvas canvas元素的ID |
+| [userConfig.name.div] | <code>String</code> | <code>&#x27;live2d-widget&#x27;</code> | ID name of the div div元素的ID |
+| [userConfig.opacity] | <code>Number</code> | <code>1.0</code> | opacity 透明度 |
+| [userConfig.onTouchHitArea] | <code>function</code> | <code>null</code> | callback for on touch model on a hitarea, the callback contains         the hit area name and the X and Y coordinates |
+
+### Doing more with the model
+
+There are several functions added that allow you to modify's the model animations or capture a frame of it(like a take a photo sort of function).
+
+<a name="L2Dwidget+captureFrame"></a>
+
+#### l2Dwidget.captureFrame(callback) ⇒ <code>null</code>
+Capture current frame to png file [captureFrame](captureFrame)
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>function</code> | The callback function which will receive the current frame |
+
+<a name="L2Dwidget+downloadFrame"></a>
+
+#### l2Dwidget.downloadFrame() ⇒ <code>null</code>
+Download current frame [L2Dwidget.captureFrame](L2Dwidget.captureFrame)
+
+<a name="L2Dwidget+printParameters"></a>
+
+### l2Dwidget.printParameters() ⇒ <code>null</code>
+Useful for knowing which parameters your model has.
+
+<a name="L2Dwidget+printExpressions"></a>
+
+#### l2Dwidget.printExpressions() ⇒ <code>null</code>
+Useful for debugging sometimes.he loaded model.
+
+<a name="L2Dwidget+startRandomExpression"></a>
+
+#### l2Dwidget.startRandomExpression() ⇒ <code>null</code>
+Starts a random expression on the loaded model.
+
+**Kind**: instance method of [<code>L2Dwidget</code>](#L2Dwidget)
+<a name="L2Dwidget+startExpression"></a>
+
+#### l2Dwidget.startExpression(expressionId) ⇒ <code>null</code>
+Starts the specified expression by it's id.
+
+| Param | Type |
+| --- | --- |
+| expressionId | <code>String</code> |
+
+<a name="L2Dwidget+getParameterIds"></a>
+
+#### l2Dwidget.getParameterIds() ⇒ <code>Array</code>
+returns a list containing the ids of all the parameters the loaded model has
+
+<a name="L2Dwidget+setParameterValueById"></a>
+
+#### l2Dwidget.setParameterValueById(parameterId, value) ⇒ <code>null</code>
+Sets a parameter's value by it's id
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parameterId | <code>CubismId</code> | the parameter's id |
+| value | <code>Number</code> | the value to set |
+
+<a name="L2Dwidget+setParameterValueByName"></a>
+
+#### l2Dwidget.setParameterValueByName(name, value) ⇒ <code>null</code>
+Sets an specific parameter to an specific value.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | the parameter's name |
+| value | <code>Number</code> | the value to set |
+
+## Build your own
+
+If you want to develop/build your own version of this library, first you'll need to clone/download this repository.
+
+```
+git clone git@github.com:aldoram5/live2d-widget.js.git
+```
+
+Then run 
+
+```
+git submodule init
+```
+
+to grab the live2d framework dependency.
+
+After that you need to download the [Core SDK](https://www.live2d.com/en/download/cubism-sdk/download-web/) from the official site yourself and paste only the contents of the Core/ folder inside the Core folder here.
+
+After all that then just install the dependencies with `npm install`.
+
+When building a release version(minified js) use `npm run-script build:prod`. If you're developing and testing is easier to run `npm run-script build:dev` which will keep automatically building the library for you and won't minify it so it's easier to debug.
+
+
+
+# Original readme:
+
+
 [![npm][npm]][npm-url]
 [![deps][deps]][deps-url]
 [![devdeps][devdeps]][devdeps-url]
