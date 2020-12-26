@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+//const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const nowDate = new Date();
 const isProd = e => e === 'prod';
 
@@ -29,7 +29,7 @@ module.exports = env => {return{
       'process.env': {
         'NODE_ENV': JSON.stringify((isProd(env) ? 'production' : 'development')),
       },
-    }),
+    }),/*
     new UglifyJsPlugin({
       cache: false,
       parallel: true,
@@ -43,7 +43,7 @@ module.exports = env => {return{
           drop_console: false,
         },
       },
-    }),
+    }),*/
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,
     }),

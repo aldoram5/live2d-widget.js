@@ -152,6 +152,6 @@ export class LAppLive2DManager {
   _model: LAppModel; // We'll only process one model at a time
   _finishedMotion = (self: ACubismMotion): void => {
     LAppPal.printMessage('Motion Finished:');
-    //console.log(self);
+    
   };
 }

@@ -115,13 +115,11 @@ export class LAppModel extends CubismUserModel {
   public loadAssetsForModelAtPath(path: string): void {
 
     this._modelPath = path;
-    //console.log(path)
 
     this._modelHomeDir = this._modelPath.substring(0, this._modelPath.lastIndexOf('/')) +"/";
 
     fetch(path)
       .then(response => {
-        //console.log(response)
         return response.arrayBuffer()
       })
       .then(arrayBuffer => {

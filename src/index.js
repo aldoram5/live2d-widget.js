@@ -115,7 +115,7 @@ class L2Dwidget extends EventEmitter {
   }
 
   /**
-   * download current frame {@link L2Dwidget.captureFrame}
+   * Download current frame {@link L2Dwidget.captureFrame}
    * @return {null}
    */
 
@@ -132,45 +132,71 @@ class L2Dwidget extends EventEmitter {
     );
   }
 
+  /**
+   * Prints the parameter data of the loaded model. 
+   * Useful for knowing which parameters your model has.
+   * @return {null}
+   */
+
   printParameters(){
     LAppLive2DManager.getInstance().getModel().printParameters();
   }
+
+  /**
+   * Prints the expression data of the loaded model.
+   * Useful for debugging sometimes.
+   * @return {null}
+   */
 
   printExpressions(){
     LAppLive2DManager.getInstance().getModel().printExpressions();
   }
 
-  printMotions(){
-    LAppLive2DManager.getInstance().getModel().printMotions();
-  }
+  /**
+   * Starts a random expression on the loaded model.
+   * @return {null}
+   */
 
   startRandomExpression(){
     LAppLive2DManager.getInstance().getModel().setRandomExpression();
   }
 
-  startRandomMotion(group,priority,onfinishedMotionHandler){
-    LAppLive2DManager.getInstance().getModel().startRandomMotion(group,priority,onfinishedMotionHandler);
-  }
-
+  /**
+   * Starts the specified expression by it's id.
+   * @param {String} expressionId 
+   * @return {null}
+   */
   startExpression(expressionId){
     LAppLive2DManager.getInstance().getModel().setExpression(expressionId);
   }
 
-  startMotion(group,number,priority,onfinishedMotionHandler){
-    LAppLive2DManager.getInstance().getModel().startMotion(group,number,priority,onfinishedMotionHandler);
-  }
-
+  /**
+   * returns a list containing the ids of all the parameters the loaded model has
+   * @return {Array}
+   */
   getParameterIds(){
     return LAppLive2DManager.getInstance().getModel().getParameterIds();
   }
 
+  /**
+   * Sets a parameter's value by it's id
+   * @param {CubismId} parameterId the parameter's id 
+   * @param {Number} value the value to set
+   * @return {null} 
+   */
   setParameterValueById(parameterId, value){
-    return LAppLive2DManager.getInstance().getModel().setParameterValueById(parameterId,value);
+    LAppLive2DManager.getInstance().getModel().setParameterValueById(parameterId,value);
   }
   
+  /**
+   * Sets an specific parameter to an specific value.
+   * @param {String} name the parameter's name 
+   * @param {Number} value the value to set
+   * @return {null}
+   */
   setParameterValueByName(name, value){
     const id = LAppLive2DManager.getInstance().getModel().getParameterIdByName(name);
-    return setParameterValueById(id,value);
+    setParameterValueById(id,value);
   }
 
 };
