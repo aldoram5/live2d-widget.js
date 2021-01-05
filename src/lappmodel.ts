@@ -116,7 +116,7 @@ export class LAppModel extends CubismUserModel {
 
     this._modelPath = path;
 
-    this._modelHomeDir = this._modelPath.substring(0, this._modelPath.lastIndexOf('/')) +"/";
+    this._modelHomeDir = this._modelPath.substring(0, this._modelPath.lastIndexOf('/')) + "/";
 
     fetch(path)
       .then(response => {
@@ -147,7 +147,7 @@ export class LAppModel extends CubismUserModel {
     this._initialized = false;
 
     this._modelSetting = setting;
-    
+
     this.setOpacity(config.opacity);
 
     this._lipsync = config.model.lipsync
@@ -155,7 +155,7 @@ export class LAppModel extends CubismUserModel {
     // CubismModel
     if (this._modelSetting.getModelFileName() != '') {
       const modelFileName = this._modelSetting.getModelFileName();
-      
+
       fetch(`${this._modelHomeDir}/${modelFileName}`)
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
@@ -271,6 +271,9 @@ export class LAppModel extends CubismUserModel {
     const setupEyeBlink = (): void => {
       if (this._modelSetting.getEyeBlinkParameterCount() > 0 && config.model.eyeBlink) {
         this._eyeBlink = CubismEyeBlink.create(this._modelSetting);
+
+        this._eyeBlinkCheck = config.eyeBlink;
+
         this._state = LoadStep.SetupBreath;
       }
 
@@ -512,7 +515,7 @@ export class LAppModel extends CubismUserModel {
 
     // まばたき
     if (!motionUpdated) {
-      if (this._eyeBlink != null) {
+      if (this._eyeBlink != null && this._eyeBlinkCheck) {
         // メインモーションの更新がないとき
         this._eyeBlink.updateParameters(this._model, deltaTimeSeconds); // 目パチ
       }
@@ -559,6 +562,7 @@ export class LAppModel extends CubismUserModel {
       //project we'll read the value from a user defined function
       var value = 0;
       if (typeof config.model.lipsyncFunction === 'function') {
+
         value = config.model.lipsyncFunction(deltaTimeSeconds);
       }
 
@@ -746,28 +750,27 @@ export class LAppModel extends CubismUserModel {
 
     return false;
   }
+
   /**
    * 当たり判定テスト
    * 指定ＩＤの頂点リストから矩形を計算し、座標をが矩形範囲内か判定する。
    *
-   * @param hitArenaName  当たり判定をテストする対象のID
    * @param x             判定を行うX座標
    * @param y             判定を行うY座標
    */
   public checkHits(x: number, y: number): boolean {
-    // 透明時は当たり判定無し。
-    if (this._opacity < 1) {
+    // Checks for opacity and if the actual onTouchHitArea is a function
+    if (this._opacity < 1 || config.onTouchHitArea === null || typeof config.onTouchHitArea !== 'function' ) {
       return false;
     }
-
     const count: number = this._modelSetting.getHitAreasCount();
-
 
     for (let i = 0; i < count; i++) {
       const drawId: CubismIdHandle = this._modelSetting.getHitAreaId(i);
-        
+     
       if (this.isHit(drawId, x, y)) {
-        config.onTouchHitArea(this._modelSetting.getHitAreaName(i),x,y);
+        
+        config.onTouchHitArea(this._modelSetting.getHitAreaName(i), x, y);
       }
     }
 
@@ -880,32 +883,40 @@ export class LAppModel extends CubismUserModel {
       this.doDraw();
     }
   }
-  public getCubismModel(): CubismModel{
+  public getCubismModel(): CubismModel {
     return this.getModel();
   }
 
-  public printParameters(): void{
+  public printParameters(): void {
     console.log(this.getModel().getModel().parameters);
   }
 
-  public printExpressions(): void{
+  public printExpressions(): void {
     console.log(this._expressions);
   }
 
-  public printMotions(): void{
+  public printMotions(): void {
     console.log(this._motions);
   }
 
-  public getParameterIds(): String[]{
+  public getParameterIds(): String[] {
     return this.getModel().getModel().parameters.ids;
   }
 
-  public setParameterValueById(parameterId: cubismid.CubismId, value: number): void{
-    return this.getModel().setParameterValueById(parameterId,value);
+  public setParameterValueById(parameterId: cubismid.CubismId, value: number): void {
+    return this.getModel().setParameterValueById(parameterId, value);
   }
 
-  public getParameterIdByName(id: string | csmstring.csmString){
+  public getParameterIdByName(id: string | csmstring.csmString) {
     return CubismFramework.getIdManager().getId(id);
+  }
+
+  public setEyeBlink(value:Boolean): void {
+    this._eyeBlinkCheck = value
+  }
+
+  public getEyeBlink():Boolean{
+    return this._eyeBlinkCheck
   }
 
   /**
@@ -917,6 +928,8 @@ export class LAppModel extends CubismUserModel {
     this._modelSetting = null;
     this._modelHomeDir = null;
     this._userTimeSeconds = 0.0;
+
+    this._eyeBlinkCheck = true;
 
     this._eyeBlinkIds = new csmVector<CubismIdHandle>();
     this._lipSyncIds = new csmVector<CubismIdHandle>();
@@ -957,7 +970,8 @@ export class LAppModel extends CubismUserModel {
   _modelHomeDir: string; // モデルセッティングが置かれたディレクトリ
   _modelPath: string; // モデルセッティングが置かれたディレクトリ
   _userTimeSeconds: number; // デルタ時間の積算値[秒]
-
+  
+  _eyeBlinkCheck:Boolean;
   _eyeBlinkIds: csmVector<CubismIdHandle>; // モデルに設定された瞬き機能用パラメータID
   _lipSyncIds: csmVector<CubismIdHandle>; // モデルに設定されたリップシンク機能用パラメータID
 

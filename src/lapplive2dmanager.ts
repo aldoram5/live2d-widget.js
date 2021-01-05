@@ -83,8 +83,8 @@ export class LAppLive2DManager {
         `[APP]tap point: {x: ${x.toFixed(2)} y: ${y.toFixed(2)}}`
       );
     }
-
     this._model.checkHits(x,y);
+    
       /*
       if (this._model.hitTest(LAppDefine.HitAreaNameHead, x, y)) {
         if (LAppDefine.DebugLogEnable) {
