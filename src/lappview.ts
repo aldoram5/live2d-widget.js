@@ -53,15 +53,15 @@ export class LAppView {
 
     this._viewMatrix.setScreenRect(left, right, bottom, top); // デバイスに対応する画面の範囲。 Xの左端、Xの右端、Yの下端、Yの上端
 
-    const screenW: number = Math.abs(left - right);
+    const screenW: number = config.scale * Math.abs(left - right);
 
-    //TODO
-    this._deviceToScreen.scaleRelative(config.scale * screenW / width, config.scale * -screenW / width);
-    this._deviceToScreen.translateRelative(-width * 0.5, -height * 0.5);
+    this._deviceToScreen.scaleRelative( screenW / width, -screenW / width);
+    this._deviceToScreen.translateRelative( -width * 0.5, -height * 0.5);
 
     // 表示範囲の設定
     this._viewMatrix.setMaxScale(LAppDefine.ViewMaxScale); // 限界拡張率
     this._viewMatrix.setMinScale(LAppDefine.ViewMinScale); // 限界縮小率
+
 
     // 表示できる最大範囲
     this._viewMatrix.setMaxScreenRect(
@@ -149,20 +149,19 @@ export class LAppView {
     const live2DManager: LAppLive2DManager = LAppLive2DManager.getInstance();
     live2DManager.onDrag(0.0, 0.0);
 
+    
     {
-      // シングルタップ
-      const x: number = this._deviceToScreen.transformX(
-        this._touchManager.getX()
-      ); // 論理座標変換した座標を取得。
-      const y: number = this._deviceToScreen.transformY(
-        this._touchManager.getY()
-      ); // 論理座標変化した座標を取得。
-/*
-      if (LAppDefine.DebugTouchLogEnable) {
-        LAppPal.printMessage(`[APP]touchesEnded x: ${x} y: ${y}`);
-      }*/
-      live2DManager.onTap(x, y);
 
+      //adapt to the scale
+      const x: number = this._deviceToScreen.transformX(
+        pointX 
+      )/(config.scale * config.scale); 
+      const y: number = this._deviceToScreen.transformY(
+        pointY 
+      )/(config.scale * config.scale);
+      
+      live2DManager.onTap(x , y);
+      
 
     }
   }

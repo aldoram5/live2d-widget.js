@@ -62,6 +62,9 @@ export class Live2DAppDelegate {
     //check if element exists already
     let e = document.getElementById(config.name.div)
     let c = document.getElementById(config.name.canvas)
+    
+    if(config.scale === 0 ) config.scale = 1
+
     if (e == null || c == null) {
       //if it doesn't then lets create it
       let container = document.createElement('div');
