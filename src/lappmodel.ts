@@ -272,7 +272,7 @@ export class LAppModel extends CubismUserModel {
       if (this._modelSetting.getEyeBlinkParameterCount() > 0 && config.model.eyeBlink) {
         this._eyeBlink = CubismEyeBlink.create(this._modelSetting);
 
-        this._eyeBlinkCheck = config.eyeBlink;
+        this._eyeBlinkCheck = config.model.eyeBlink;
 
         this._state = LoadStep.SetupBreath;
       }
