@@ -199,6 +199,24 @@ class L2Dwidget extends EventEmitter {
     setParameterValueById(id,value);
   }
 
+  /**
+   * Sets the value of the EyeBlink parameter
+   * @param {Boolean} value the boolean value to set the EyeBlink parameter 
+   * @return {null}
+   */
+  setEyeBlink(value){
+    LAppLive2DManager.getInstance().getModel().setEyeBlink(value);
+  }
+
+  /**
+   * Returns the value of the EyeBlink parameter
+   * @return {Boolean}
+   */
+
+  getEyeBlink(){
+    return LAppLive2DManager.getInstance().getModel().getEyeBlink();
+  }
+
 };
 
 let _ = new L2Dwidget();
