@@ -43,6 +43,5 @@ Add any other context about the problem here.
 
 - [ ] I have alreday read instructions in [README](../README.md).
 
-> Change the `[ ]` into `[x]` to show myacceptance.
+> Change the `[ ]` into `[x]` to show my acceptance.
 
-@EYHN @xiazeyu
